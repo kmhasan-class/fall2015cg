@@ -19,6 +19,11 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL11.glVertex3f;
 
 /**
@@ -26,7 +31,7 @@ import static org.lwjgl.opengl.GL11.glVertex3f;
  * @author kmhasan
  */
 public class OpenGLDemo {
-
+    float theta = 0f;
     long window;
 
     public void init() {
@@ -53,6 +58,14 @@ public class OpenGLDemo {
         glEnd();
     }
 
+    public void drawTriangle() {
+        glBegin(GL_TRIANGLES);
+            glVertex3f(-0.25f, -0.25f, 0.0f);
+            glVertex3f(+0.25f, -0.25f, 0.0f);
+            glVertex3f(+0.0f, +0.25f, 0.0f);
+        glEnd();
+    }
+
     public void loop() {
         GL.createCapabilities();
         glClearColor(0f, 0f, 0f, 1f);
@@ -60,11 +73,24 @@ public class OpenGLDemo {
             glClear(GL_COLOR_BUFFER_BIT);
             
             drawGrid();
-            glBegin(GL_TRIANGLES);
-                glVertex3f(-0.5f, -0.5f, 0.0f);
-                glVertex3f(+0.5f, -0.5f, 0.0f);
-                glVertex3f(+0.0f, +0.5f, 0.0f);
-            glEnd();
+            glColor3f(1.0f, 1.0f, 0.0f);
+            drawTriangle();
+            glPushMatrix();
+            theta++;
+            glRotatef(theta, 0, 0, 1);
+            glTranslatef(0.5f, 0f, 0f);
+            glScalef(0.5f, 0.5f, 0.5f);
+            glColor3f(0.0f, 0.0f, 1.0f);
+            drawTriangle();
+            
+            // White MOON
+            glRotatef(5*theta, 0, 0, 1);
+            glTranslatef(0.5f, 0.0f, 0.0f);
+            glScalef(0.5f, 0.5f, 0.5f);
+            glColor3f(1.0f, 1.0f, 1.0f);
+            drawTriangle();
+            
+            glPopMatrix();
             
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
